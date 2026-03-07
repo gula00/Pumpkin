@@ -25,12 +25,11 @@ impl<'a> CUpdateTags<'a> {
 impl ClientPacket for CUpdateTags<'_> {
     fn write_packet_data(
         &self,
-        write: impl Write,
+        mut write: impl Write,
         version: &MinecraftVersion,
     ) -> Result<(), WritingError> {
-        let mut write = write;
         write.write_list(self.tags, |p, registry_key| {
-            p.write_string(&format!("minecraft:{}", registry_key.identifier_string(),))?;
+            p.write_string(&format!("minecraft:{}", registry_key.identifier_string()))?;
 
             let Some(values) = get_registry_key_tags(*version, *registry_key) else {
                 // no tags defined for that registry key in this version
